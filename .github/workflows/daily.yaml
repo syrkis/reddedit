@@ -1,10 +1,13 @@
-name: Daily
+name: On Push Run
 
-on: 0 8 * * *
+on: push
+
+env:
+  DEVOPS_DIR: devops
 
 jobs:
-  run-daily:
-    name: Run Daily
+  hello-world:
+    name: Hello world
     runs-on: ubuntu-latest
     steps:
     - name: Check-out devops repository
@@ -15,5 +18,5 @@ jobs:
         path: ${{ env.DEVOPS_DIR }}
 
     - name: Hello World
-      run: python main.py
+      run: python ${{ env.DEVOPS_DIR }}/hello_world.py
       shell: sh

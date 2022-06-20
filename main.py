@@ -12,7 +12,7 @@ def main():
     client = utils.get_client()
     data   = utils.setup()
     data   = run_daily(client, data)
-    data.to_csv("data.csv", index=False)
+    data.to_csv("data.csv")
 
 if __name__ == "__main__":
     main()
