@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 import random, time
 
-def run_daily(client, df, count=6):
+def run_daily(client, df, count=100):
     post_iter = utils.get_new_posts(client, count*2)
     df        = add_new_posts_and_log_votes(post_iter, df, count, client)
     return df
