@@ -31,16 +31,16 @@ def get_likes(client, post):
     submission = client.submission(post)
     return submission.score # fix to look at 
 
-def setup():
-    if not os.path.isfile('data.csv'):
+def setup(path):
+    if not os.path.isfile(path):
         today = datetime.today()
         cols  = ['post_id', 'treatment']
         dates = [date_to_str(today + timedelta(days=x)) for x in range(30)]
         df = pd.DataFrame(columns=cols + dates)
         df.set_index('post_id', inplace=True)
-        df.to_csv('data.csv')
+        df.to_csv(path)
     else :
-        df = pd.read_csv('data.csv')
+        df = pd.read_csv(path)
         df.set_index('post_id', inplace=True)
     return df
 
