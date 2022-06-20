@@ -41,7 +41,5 @@ def add_new_posts_and_log_votes(post_iter, df, count, client):
     for post in df.index:
         df[today].loc[post] = utils.get_likes(client, post)
         time.sleep(.1)
-    print(df)
-    exit()
     return df
 
