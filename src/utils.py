@@ -3,9 +3,8 @@
 # by: Noah Syrkis
 
 # imports
-import numpy as np
 import pandas as pd
-import praw, yaml, os
+import praw, os
 from datetime import datetime, timedelta
 
 
@@ -13,13 +12,11 @@ from datetime import datetime, timedelta
 def get_client():
     with open('.env.yaml') as f:
         env = yaml.safe_load(f)['env']
-    print(env)
-    exit()
-    client = praw.Reddit(client_id=env['client_id'],
-                         client_secret=env['secret'],
-                         username=env['username'],
-                         password=env['password'],
-                         user_agent=env['agent'])
+    client = praw.Reddit(client_id=os.getenv('REDDIT_CLIENT'),
+                         client_secret=os.getenv('REDDIT_SECRET'),
+                         username='syrkis',
+                         password=os.getenv('REDDIT_PASSWORD'),
+                         user_agent='syrkis')
     return client
 
 # get subreddit
@@ -39,7 +36,7 @@ def get_likes(post):
 def setup():
     if not os.path.isfile('data.csv'):
         today = datetime.today()
-        cols  = ['post_id', 'like_count', 'like_ratio']
+        cols  = ['post_id', 'treatment']
         dates = [date_to_str(today + timedelta(days=x)) for x in range(30)]
         df = pd.DataFrame(columns=cols + dates)
         df.to_csv('data.csv', index=False)
