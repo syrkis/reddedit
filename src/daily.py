@@ -4,6 +4,7 @@
 
 import src.utils as utils
 from datetime import datetime, timedelta
+from prawcore.exceptions import NotFound
 import pandas as pd
 import random, time
 
@@ -26,7 +27,7 @@ def add_new_posts_and_log_votes(post_iter, df, count, client):
 
     # upvote posts in treatment group
     for i in range(len(posts)//2):
-        posts[i] = (posts[i][0], posts[i][1] + 1, 1) # we're including OUR vote
+        posts[i] = (posts[i][0], posts[i][1] + 1, 1) # including OUR vote
         utils.upvote_post(client, posts[i][0])
         time.sleep(.1)
     posts.sort()
@@ -39,7 +40,10 @@ def add_new_posts_and_log_votes(post_iter, df, count, client):
         df = pd.concat([df, sample])
 
     for post in df.index:
-        df[today].loc[post] = utils.get_likes(client, post)
-        time.sleep(.1)
+        try:
+            df[today].loc[post] = utils.get_likes(client, post)
+            time.sleep(.1)
+        except NotFound:
+            df[today].loc[post] = 0
     return df
 
