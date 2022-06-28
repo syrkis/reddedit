@@ -17,11 +17,9 @@ def get_client():
                          user_agent='syrkis')
     return client
 
-# get subreddit
-def get_new_posts(client, num_posts):
-    # get new posts
-    new_posts = client.subreddit('all').new(limit=num_posts)
-    return new_posts
+def get_stream(client):
+    stream = client.subreddit('wallstreetbets').stream.submissions()
+    return stream
 
 def upvote_post(client, post):
     submission = client.submission(post)

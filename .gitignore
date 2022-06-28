@@ -2,4 +2,4 @@
 out.log
 **/__pycache__/
 **/*.pdf
-data.csv
+*.csv
