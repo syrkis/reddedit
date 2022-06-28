@@ -18,7 +18,7 @@ def get_client():
     return client
 
 def get_stream(client):
-    stream = client.subreddit('wallstreetbets').stream.submissions()
+    stream = client.subreddit('all').new()
     return stream
 
 def upvote_post(client, post):

@@ -10,17 +10,17 @@ import pandas as pd
 import random, time
 from tqdm import tqdm
 
-def run_daily(client, df, count=4):
+def run_daily(client, df, count=100):
+    alpha = 3
     posts   = []
     fuckups = 0
     stream  = utils.get_stream(client)
     while True:
         try:
             for submission in stream:
-                if len(posts) < count * 3:
+                if len(posts) < count * alpha:
                     posts.append(submission)
-                    time.sleep(.1)
-                    print('success')
+                    time.sleep(.08)
                 else:
                     break
         except (PrawcoreException, PRAWException) as err:
@@ -28,24 +28,23 @@ def run_daily(client, df, count=4):
         except Exception as e:
             fuckups += 1
             print('script fuckup', fuckups, e)
-        if len(posts) == count * 3:
+        if len(posts) >= count * alpha:
             break
         time.sleep(.1)
-    print(posts)
     df        = add_new_posts_and_log_votes(posts, df, count, client)
     return df
 
-def add_new_posts_and_log_votes(posts_stream, df, count, client):
+def add_new_posts_and_log_votes(stream, df, count, client):
     today     = datetime.now().strftime("%Y-%m-%d")
     posts     = []
 
     # add new posts
-    for post in posts_stream:
-        if len(posts) == count:
+    for post in stream:
+        time.sleep(.1)
+        if len(posts) >= count:
             break
         if post.id not in df.index and post.score == 1:
-            posts.append((post.id, post.score, 0))
-        time.sleep(.1)
+            posts.append((post.id, post.score, 0)) # 0 is for treatment/control
     random.shuffle(posts)
 
     # upvote posts in treatment group
