@@ -64,7 +64,8 @@ def add_new_posts_and_log_votes(stream, df, count, client):
         df = pd.concat([df, sample])
 
     for post in tqdm(df.index):
-        if df.loc[post].count() <= 9: # if we've made less than 7 observations
+        observations = df.loc[post][df.columns[1:]].count() # if we've made less than 7 observations
+        if observations < 7: # if we've made less than 7 observations
             time.sleep(.1)
             try:
                 df[today].loc[post] = int(utils.get_likes(client, post))
