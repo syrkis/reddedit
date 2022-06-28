@@ -31,7 +31,8 @@ def run_daily(client, df, count=100):
         if len(posts) >= count * alpha:
             break
         time.sleep(.1)
-    df        = add_new_posts_and_log_votes(posts, df, count, client)
+    print(posts)
+    df = add_new_posts_and_log_votes(posts, df, count, client)
     return df
 
 def add_new_posts_and_log_votes(stream, df, count, client):
@@ -46,10 +47,11 @@ def add_new_posts_and_log_votes(stream, df, count, client):
         if post.id not in df.index and post.score == 1:
             posts.append((post.id, post.score, 0)) # 0 is for treatment/control
     random.shuffle(posts)
+    print(posts)
 
     # upvote posts in treatment group
     for i in range(len(posts)//2):
-        posts[i] = (posts[i][0], posts[i][1] + 1, 1) # including OUR vote
+        posts[i] = (posts[i][0], posts[i][1], 1) # including OUR vote
         utils.upvote_post(client, posts[i][0])
         time.sleep(.1)
     posts.sort()
@@ -62,12 +64,15 @@ def add_new_posts_and_log_votes(stream, df, count, client):
         df = pd.concat([df, sample])
 
     for post in tqdm(df.index):
-        try:
-            df[today].loc[post] = int(utils.get_likes(client, post))
+        if df.loc[post].count() <= 9: # if we've made less than 7 observations
             time.sleep(.1)
-        except NotFound:
-            df[today].loc[post] = "not found"
-        except Forbidden:
-            df[today].loc[post] = "forbidden"
+            try:
+                df[today].loc[post] = int(utils.get_likes(client, post))
+            except NotFound:
+                df[today].loc[post] = "not found"
+            except Forbidden:
+                df[today].loc[post] = "forbidden"
+        else:
+            continue
     return df
 
