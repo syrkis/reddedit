@@ -3,3 +3,6 @@ out.log
 **/__pycache__/
 **/*.pdf
 *.csv
+.python-version
+.ipynb_checkpoints/
+src/.ipynb_checkpoints/
