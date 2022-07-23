@@ -3,7 +3,6 @@ out.log
 **/__pycache__/
 **/*.pdf
 **/.*.pdf.icloud
-*.csv
 .python-version
 .ipynb_checkpoints/
 src/.ipynb_checkpoints/
