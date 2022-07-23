@@ -1,4 +1,4 @@
-.env.yaml
+.env
 out.log
 **/__pycache__/
 **/*.pdf
